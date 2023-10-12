@@ -1,0 +1,5 @@
+<%= form_with(model: @comentario, url: comentarios_path) do |form| %>
+  <%= form.text_area :contenido, placeholder: "Escribe tu comentario aquí" %>
+  <%= form.text_field :correo, placeholder: "Correo" %>
+  <%= form.submit "Publicar Comentario" %>
+<% end %>

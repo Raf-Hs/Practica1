@@ -1,0 +1,65 @@
+<h1><%= @blog_post.title %></h1>
+<%= @blog_post.content %><br>
+
+<% if @blog_post.image.present? %>
+  <%= image_tag @blog_post.image, alt: @blog_post.title, style: "max-width: 100px; max-height: 100px;" %><br>
+<% end %>
+
+<p>Rating: <%= @blog_post.average_rating %></p>
+<p>Fecha de Creación: <%= @blog_post.created_at.to_formatted_s(:long) %></p>
+<p>Fecha de Edición: <%= @blog_post.updated_at.to_formatted_s(:long) %></p>
+
+<%= form_with(model: [@blog_post], url: blog_post_rate_path(@blog_post), method: 'post') do |form| %>
+  <div class="field">
+    <%= form.label :rating, "Calificación" %>
+    <%= form.number_field :rating, step: 0.1, min: 1, max: 5 %>
+  </div>
+  <div class="actions">
+    <%= form.submit "Calificar" %>
+  </div>
+<% end %>
+
+<h3>Agregar Comentario</h3>
+<%= form_for([@blog_post, @blog_post.comentarios.build], remote: true) do |form| %>
+  <div class="field">
+    <%= form.text_field :correo, placeholder: "Tu correo" %>
+  </div>
+  <div class="field">
+    <%= form.text_area :contenido, placeholder: "Escribe tu comentario aquí" %>
+  </div>
+  <div class="actions">
+    <%= form.submit "Agregar Comentario", id: "agregar_comentario" %>
+  </div>
+<% end %>
+
+<h2>Comentarios</h2>
+
+<% @blog_post.comentarios.each do |comentario| %>
+  <div>
+    <p><strong><%= comentario.correo %></strong></p>
+    <p><%= comentario.contenido %></p>
+    
+    
+    <% if comentario.created_at.present? %>
+      <p>Fecha de Creación: <%= comentario.created_at.to_formatted_s(:long) %></p>
+    <% end %>
+    
+    <% if comentario.updated_at.present? %>
+      <p>Fecha de Edición: <%= comentario.updated_at.to_formatted_s(:long) %></p>
+    <% end %>
+    
+    
+  </div>
+<% end %>
+
+
+<%= javascript_pack_tag 'application' %>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const app = new Vue({
+      el: '#app'
+    });
+  });
+</script>
+
